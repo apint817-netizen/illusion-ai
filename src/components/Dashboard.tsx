@@ -6,7 +6,7 @@ import Workspace from './Workspace';
 import SettingsPanel from './SettingsPanel';
 import Gallery from './Gallery';
 import styles from '../app/page.module.css';
-import removeBackground from "@imgly/background-removal";
+import { removeBackground } from "@imgly/background-removal";
 
 export default function Dashboard() {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
