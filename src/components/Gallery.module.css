@@ -1,0 +1,84 @@
+.galleryContainer {
+  padding: 0 2rem 2rem;
+  margin-top: -1rem; /* Adjusts spacing with the upload zone */
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  aspect-ratio: 3/4;
+  transition: var(--transition-normal);
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent-primary);
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--bg-tertiary), var(--border-light));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imageIcon {
+  font-size: 2rem;
+  opacity: 0.5;
+}
+
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.4);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: var(--transition-normal);
+}
+
+.card:hover .cardOverlay {
+  opacity: 1;
+}
+
+.actionBtn {
+  background: white;
+  color: var(--text-primary);
+  padding: 0.5rem 1.5rem;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transform: translateY(10px);
+  transition: var(--transition-normal);
+}
+
+.card:hover .actionBtn {
+  transform: translateY(0);
+}
+
+.actionBtn:hover {
+  background: var(--accent-primary);
+  color: white;
+}
