@@ -29,43 +29,95 @@ export async function POST(req: Request) {
     const uploadedFiles: string[] = await uploadRes.json();
     const filePath = uploadedFiles[0];
 
-    // Step 2: Call the /image endpoint via Gradio API
-    const predictRes = await fetch(`${GRADIO_SPACE}/api/predict`, {
+    // Step 2: Call the /call/image endpoint (Gradio 4+)
+    const callRes = await fetch(`${GRADIO_SPACE}/call/image`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        fn_index: 0,
         data: [{
           path: filePath,
           meta: { _type: "gradio.FileData" }
         }],
-        session_hash: Math.random().toString(36).substring(2),
       }),
     });
 
-    if (!predictRes.ok) {
-      const errText = await predictRes.text();
-      console.error("Predict failed:", predictRes.status, errText);
-      return NextResponse.json({ error: `Ошибка AI: ${predictRes.status}` }, { status: 502 });
+    if (!callRes.ok) {
+      const errText = await callRes.text();
+      console.error("Call failed:", callRes.status, errText);
+      return NextResponse.json({ error: `Ошибка AI call: ${callRes.status} ${errText}` }, { status: 502 });
     }
 
-    const result = await predictRes.json();
+    const callResult = await callRes.json();
+    const eventId = callResult.event_id;
+
+    if (!eventId) {
+      console.error("No event_id:", JSON.stringify(callResult));
+      return NextResponse.json({ error: 'AI не вернул event_id' }, { status: 502 });
+    }
+
+    // Step 3: Fetch result via SSE endpoint /result/{event_id}
+    const resultRes = await fetch(`${GRADIO_SPACE}/call/image/${eventId}`);
+    if (!resultRes.ok) {
+      const errText = await resultRes.text();
+      console.error("Result failed:", resultRes.status, errText);
+      return NextResponse.json({ error: `Ошибка получения результата: ${resultRes.status}` }, { status: 502 });
+    }
+
+    const resultText = await resultRes.text();
     
-    // The result contains [slider_data, file_data]
-    // file_data (index 1) has the PNG with removed background
-    const outputFile = result.data?.[1];
-    if (!outputFile?.url) {
-      console.error("No output URL in result:", JSON.stringify(result));
-      return NextResponse.json({ error: 'AI не вернул результат' }, { status: 502 });
+    // Parse SSE response - look for "data:" line with JSON
+    const lines = resultText.split('\n');
+    let outputData: any = null;
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (line === 'event: complete' || line === 'event:complete') {
+        // Next data line is our result
+        const dataLine = lines[i + 1]?.trim();
+        if (dataLine?.startsWith('data:')) {
+          try {
+            outputData = JSON.parse(dataLine.substring(5).trim());
+          } catch (e) {
+            console.error("Failed to parse data line:", dataLine);
+          }
+        }
+      }
     }
 
-    // Step 3: Download the result image
-    const resultUrl = outputFile.url.startsWith('http') 
-      ? outputFile.url 
+    if (!outputData) {
+      // Fallback: find any data line with JSON
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('data:') && trimmed.includes('"url"')) {
+          try {
+            outputData = JSON.parse(trimmed.substring(5).trim());
+          } catch (e) {}
+        }
+      }
+    }
+
+    if (!outputData) {
+      console.error("Could not parse result SSE:", resultText.substring(0, 500));
+      return NextResponse.json({ error: 'Не удалось распознать ответ AI' }, { status: 502 });
+    }
+
+    // outputData should be array: [slider_data, file_data]
+    // file_data (index 1) has the PNG file with transparent background
+    const outputFile = Array.isArray(outputData) ? outputData[1] : outputData?.data?.[1];
+    
+    if (!outputFile?.url && !outputFile?.path) {
+      console.error("No output file in result:", JSON.stringify(outputData).substring(0, 500));
+      return NextResponse.json({ error: 'AI не вернул изображение' }, { status: 502 });
+    }
+
+    // Step 4: Download the result image
+    const resultUrl = outputFile.url 
+      ? (outputFile.url.startsWith('http') ? outputFile.url : `${GRADIO_SPACE}${outputFile.url}`)
       : `${GRADIO_SPACE}/file=${outputFile.path}`;
     
     const imageRes = await fetch(resultUrl);
     if (!imageRes.ok) {
+      console.error("Image download failed:", imageRes.status);
       return NextResponse.json({ error: 'Не удалось скачать результат' }, { status: 502 });
     }
 
