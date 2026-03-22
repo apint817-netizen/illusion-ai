@@ -6,6 +6,7 @@ import Workspace from './Workspace';
 import SettingsPanel from './SettingsPanel';
 import Gallery from './Gallery';
 import styles from '../app/page.module.css';
+import removeBackground from "@imgly/background-removal";
 
 export default function Dashboard() {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
@@ -22,23 +23,10 @@ export default function Dashboard() {
     setBackgroundImage(null);
 
     try {
-      const formData = new FormData();
-      formData.append('image', file);
-      
-      const res = await fetch('/api/remove-bg', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || 'Ошибка при удалении фона');
-      }
-
-      const blob = await res.blob();
+      const blob = await removeBackground(file);
       setTransparentImage(URL.createObjectURL(blob));
     } catch (e: any) {
-      setError(e.message);
+      setError(e.message || 'Ошибка при удалении фона');
     } finally {
       setIsUploading(false);
     }
