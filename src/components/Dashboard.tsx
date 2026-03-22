@@ -6,7 +6,7 @@ import Workspace from './Workspace';
 import SettingsPanel from './SettingsPanel';
 import Gallery from './Gallery';
 import styles from '../app/page.module.css';
-import { removeBackground } from "@imgly/background-removal";
+import { removeBackground, Config } from "@imgly/background-removal";
 
 export default function Dashboard() {
   const [originalImage, setOriginalImage] = useState<string | null>(null);
@@ -23,7 +23,10 @@ export default function Dashboard() {
     setBackgroundImage(null);
 
     try {
-      const blob = await removeBackground(file);
+      const config: Config = {
+        publicPath: "/imgly-assets/",
+      };
+      const blob = await removeBackground(file, config);
       setTransparentImage(URL.createObjectURL(blob));
     } catch (e: any) {
       setError(e.message || 'Ошибка при удалении фона');
