@@ -24,7 +24,7 @@ export default function Dashboard() {
 
     try {
       const config: Config = {
-        publicPath: "/imgly-assets/",
+        publicPath: `${window.location.origin}/imgly-assets/`,
       };
       const blob = await removeBackground(file, config);
       setTransparentImage(URL.createObjectURL(blob));
