@@ -18,7 +18,7 @@ export async function POST(req: Request) {
 
     // Call Hugging Face API for BRIA RMBG-1.4 model
     const response = await fetch(
-      "https://api-inference.huggingface.co/models/briaai/RMBG-1.4",
+      "https://router.huggingface.co/hf-inference/models/briaai/RMBG-1.4",
       {
         headers: { 
           Authorization: `Bearer ${apiKey}`,

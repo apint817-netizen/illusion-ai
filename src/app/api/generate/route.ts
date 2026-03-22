@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     const finalPrompt = `Professional product photography background, empty center, ${prompt}, ultra realistic, 8k resolution, cinematic lighting --no object, text, watermark`;
 
     const response = await fetch(
-      "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell",
+      "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell",
       {
         headers: { 
           Authorization: `Bearer ${apiKey}`,
