@@ -1,0 +1,256 @@
+.app {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f0ff 0%, #faf5ff 50%, #f0f8ff 100%);
+}
+
+/* Upload section */
+.uploadSection {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.stepTitle {
+  font-size: 1.6em;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 8px;
+}
+
+.stepDesc {
+  font-size: 1em;
+  color: #666;
+  margin: 0 0 32px;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 60px;
+  color: #666;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e5e5e5;
+  border-top-color: #7c3aed;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error {
+  padding: 24px;
+  text-align: center;
+  color: #dc2626;
+}
+
+.btn {
+  margin-top: 12px;
+  padding: 10px 24px;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.95em;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  border-color: #7c3aed;
+}
+
+/* Config section */
+.configSection {
+  display: flex;
+  gap: 24px;
+  padding: 24px;
+  min-height: calc(100vh - 70px);
+}
+
+.sidebar {
+  width: 340px;
+  flex-shrink: 0;
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+  max-height: calc(100vh - 120px);
+}
+
+.field {
+  margin-bottom: 16px;
+}
+
+.label {
+  display: block;
+  font-size: 0.85em;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 0.9em;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 6px;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: #7c3aed;
+}
+
+.textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 0.9em;
+  outline: none;
+  resize: vertical;
+  min-height: 60px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.textarea:focus {
+  border-color: #7c3aed;
+}
+
+.aiBtn {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.aiBtn:hover {
+  opacity: 0.9;
+}
+
+.aiBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.formatBtns {
+  display: flex;
+  gap: 8px;
+}
+
+.formatBtn {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 0.8em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.formatBtn:hover {
+  border-color: #a78bfa;
+}
+
+.formatActive {
+  border-color: #7c3aed;
+  background: #f5f0ff;
+  color: #7c3aed;
+  font-weight: 600;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.exportBtn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #7c3aed, #ec4899);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1em;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.exportBtn:hover {
+  opacity: 0.9;
+}
+
+.resetBtn {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 0.9em;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.resetBtn:hover {
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+/* Preview area */
+.previewArea {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+  overflow: auto;
+}
+
+.previewScale {
+  transform: scale(0.5);
+  transform-origin: top center;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .configSection {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    max-height: none;
+  }
+
+  .previewScale {
+    transform: scale(0.35);
+  }
+}
