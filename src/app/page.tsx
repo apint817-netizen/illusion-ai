@@ -1,6 +1,6 @@
 import styles from "./page.module.css";
 import Header from "@/components/Header";
-import ImageUploader from "@/components/ImageUploader";
+import Workspace from "@/components/Workspace";
 import SettingsPanel from "@/components/SettingsPanel";
 import Gallery from "@/components/Gallery";
 
@@ -10,7 +10,7 @@ export default function Home() {
       <Header />
       <main className={styles.mainLayout}>
         <div className={styles.content}>
-          <ImageUploader />
+          <Workspace />
           <Gallery />
         </div>
         <SettingsPanel />
@@ -18,4 +18,5 @@ export default function Home() {
     </div>
   );
 }
+
 
